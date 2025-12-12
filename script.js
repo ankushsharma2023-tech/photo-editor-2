@@ -1,4 +1,4 @@
-// --- 1. Canvas Setup ---
+// --- 1. Canvas Initialization ---
 const initCanvasWidth = window.innerWidth > 768 ? 600 : window.innerWidth - 40;
 const canvas = new fabric.Canvas('editorCanvas', {
     width: initCanvasWidth,
@@ -13,7 +13,7 @@ window.addEventListener('resize', () => {
     if(w < 800) { canvas.setDimensions({ width: w, height: w * 1.3 }); }
 });
 
-// --- 2. History (Undo/Redo) ---
+// --- 2. Undo/Redo System ---
 let history = [];
 let historyIndex = -1;
 let isRedoing = false;
@@ -41,76 +41,98 @@ document.getElementById('redoBtn').addEventListener('click', () => {
     }
 });
 
-// --- 3. UPLOAD BUTTON LOGIC (FIXED) ---
+// --- 3. Header & Navigation Logic ---
+
+// Upload Button
 const headerUploadBtn = document.getElementById('headerUploadBtn');
 const hiddenUploadInput = document.getElementById('hiddenUploadInput');
-
-// Clicking the purple button triggers the hidden file input
-headerUploadBtn.addEventListener('click', () => {
-    hiddenUploadInput.click();
-});
-
-// Handling the file selection
+headerUploadBtn.addEventListener('click', () => hiddenUploadInput.click());
 hiddenUploadInput.addEventListener('change', (e) => {
     const reader = new FileReader();
     reader.onload = (f) => {
         fabric.Image.fromURL(f.target.result, (img) => {
             img.scaleToWidth(canvas.width * 0.8);
-            canvas.add(img);
-            canvas.centerObject(img);
-            canvas.setActiveObject(img);
+            canvas.add(img); canvas.centerObject(img); canvas.setActiveObject(img);
             saveHistory();
         });
     };
     if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
-    hiddenUploadInput.value = ''; // Reset so you can upload same file again
+    hiddenUploadInput.value = ''; 
 });
 
-// --- 4. FILTERS LOGIC (FIXED) ---
-const filterBtns = document.querySelectorAll('.filter-btn');
+// Sidebar Tab Navigation
+const sidebarIcons = document.querySelectorAll('.sidebar-icon');
+const toolSections = document.querySelectorAll('.tool-section');
+const toolsPanel = document.getElementById('toolsPanel');
 
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-        const type = this.getAttribute('data-filter');
-        applyFilter(type);
-    });
-});
-
-function applyFilter(type) {
-    const obj = canvas.getActiveObject();
+function openPanel(panelId) {
+    // UI Updates
+    sidebarIcons.forEach(i => i.classList.remove('active'));
+    document.querySelector(`.sidebar-icon[data-target="${panelId}"]`).classList.add('active');
     
-    // Check if an object is selected and it is an image
-    if (!obj || obj.type !== 'image') {
-        alert("Please select an image on the canvas first!");
-        return;
-    }
+    toolSections.forEach(section => section.classList.remove('active'));
+    document.getElementById(panelId).classList.add('active');
 
-    // Reset filters
-    obj.filters = [];
-
-    // Apply new filter based on button data-attribute
-    switch(type) {
-        case 'grayscale':
-            obj.filters.push(new fabric.Image.filters.Grayscale());
-            break;
-        case 'sepia':
-            obj.filters.push(new fabric.Image.filters.Sepia());
-            break;
-        case 'invert':
-            obj.filters.push(new fabric.Image.filters.Invert());
-            break;
-        case 'reset':
-            // Already cleared above
-            break;
-    }
-
-    obj.applyFilters();
-    canvas.renderAll();
-    saveHistory();
+    // Mobile Drawer Logic
+    if (window.innerWidth <= 768) { toolsPanel.classList.add('open'); }
 }
 
+sidebarIcons.forEach(icon => {
+    icon.addEventListener('click', () => {
+        openPanel(icon.getAttribute('data-target'));
+    });
+});
+// Close drawer on canvas click (mobile)
+canvas.on('mouse:down', () => { if (window.innerWidth <= 768) toolsPanel.classList.remove('open'); });
 
-// --- 5. Other Features ---
+
+// --- 4. Tool Features ---
+
+// Header: Text Button (New)
+document.getElementById('headerAddTextBtn').addEventListener('click', () => {
+    const text = new fabric.IText('New Text', { 
+        left: canvas.width / 2, top: canvas.height / 2, 
+        originX: 'center', originY: 'center', fontSize: 30, fill: '#000' 
+    });
+    canvas.add(text); canvas.setActiveObject(text); saveHistory();
+    openPanel('panel-text'); // Auto-open text panel
+});
+
+// Sidebar: Add Text Button
+document.getElementById('addTextBtnSidebar').addEventListener('click', () => {
+    const text = new fabric.IText('Heading', { left: 50, top: 50, fontSize: 30, fill: '#000' });
+    canvas.add(text); canvas.setActiveObject(text); saveHistory();
+});
+
+// Text Controls (Font/Color)
+const textControls = document.getElementById('textControls');
+canvas.on('selection:created', checkSelection);
+canvas.on('selection:updated', checkSelection);
+canvas.on('selection:cleared', () => textControls.style.display = 'none');
+
+function checkSelection(e) {
+    const obj = e.selected[0];
+    if (obj && obj.type === 'i-text') textControls.style.display = 'block';
+    else textControls.style.display = 'none';
+}
+document.getElementById('textColorPicker').addEventListener('input', function() {
+    const obj = canvas.getActiveObject(); if(obj && obj.type==='i-text') { obj.set('fill', this.value); canvas.renderAll(); }
+});
+document.getElementById('fontFamilySelect').addEventListener('change', function() {
+    const obj = canvas.getActiveObject(); if(obj && obj.type==='i-text') { obj.set('fontFamily', this.value); canvas.renderAll(); saveHistory(); }
+});
+
+// Header: Crop & Rotate
+document.getElementById('headerRotateBtn').addEventListener('click', () => {
+    const activeObj = canvas.getActiveObject();
+    if (activeObj) { activeObj.rotate((activeObj.angle || 0) + 90); canvas.requestRenderAll(); saveHistory(); }
+});
+document.getElementById('headerCropBtn').addEventListener('click', () => {
+    const size = Math.min(canvas.width, canvas.height);
+    canvas.setDimensions({ width: size, height: size });
+    canvas.renderAll(); saveHistory();
+    alert("Canvas cropped to square!");
+});
 
 // Theme Toggle
 document.getElementById('themeToggleBtn').addEventListener('click', () => {
@@ -123,51 +145,21 @@ document.getElementById('themeToggleBtn').addEventListener('click', () => {
     }
 });
 
-// Navigation
-const sidebarIcons = document.querySelectorAll('.sidebar-icon');
-const toolSections = document.querySelectorAll('.tool-section');
-const toolsPanel = document.getElementById('toolsPanel');
-
-sidebarIcons.forEach(icon => {
-    icon.addEventListener('click', () => {
-        sidebarIcons.forEach(i => i.classList.remove('active'));
-        icon.classList.add('active');
-        toolSections.forEach(section => section.classList.remove('active'));
+// Filters
+const filterBtns = document.querySelectorAll('.filter-btn');
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        const type = this.getAttribute('data-filter');
+        const obj = canvas.getActiveObject();
+        if (!obj || obj.type !== 'image') { alert("Select an image first!"); return; }
         
-        const targetId = icon.getAttribute('data-target');
-        document.getElementById(targetId).classList.add('active');
-        if (window.innerWidth <= 768) { toolsPanel.classList.add('open'); }
+        obj.filters = [];
+        if(type === 'grayscale') obj.filters.push(new fabric.Image.filters.Grayscale());
+        if(type === 'sepia') obj.filters.push(new fabric.Image.filters.Sepia());
+        if(type === 'invert') obj.filters.push(new fabric.Image.filters.Invert());
+        
+        obj.applyFilters(); canvas.renderAll(); saveHistory();
     });
-});
-canvas.on('mouse:down', () => { if (window.innerWidth <= 768) toolsPanel.classList.remove('open'); });
-
-// Crop & Rotate
-document.getElementById('headerRotateBtn').addEventListener('click', () => {
-    const activeObj = canvas.getActiveObject();
-    if (activeObj) { activeObj.rotate((activeObj.angle || 0) + 90); canvas.requestRenderAll(); saveHistory(); }
-});
-document.getElementById('headerCropBtn').addEventListener('click', () => {
-    const size = Math.min(canvas.width, canvas.height);
-    canvas.setDimensions({ width: size, height: size });
-    canvas.renderAll(); saveHistory();
-});
-
-// Text
-document.getElementById('addTextBtn').addEventListener('click', () => {
-    const text = new fabric.IText('Double click to edit', { left: 50, top: 50, fontSize: 30, fill: '#000' });
-    canvas.add(text); canvas.setActiveObject(text); saveHistory();
-});
-const textControls = document.getElementById('textControls');
-canvas.on('selection:created', checkSelection);
-canvas.on('selection:updated', checkSelection);
-canvas.on('selection:cleared', () => textControls.style.display = 'none');
-function checkSelection(e) {
-    const obj = e.selected[0];
-    if (obj && obj.type === 'i-text') textControls.style.display = 'block';
-    else textControls.style.display = 'none';
-}
-document.getElementById('textColorPicker').addEventListener('input', function() {
-    const obj = canvas.getActiveObject(); if(obj && obj.type==='i-text') { obj.set('fill', this.value); canvas.renderAll(); }
 });
 
 // Shapes & Stickers
@@ -199,7 +191,7 @@ document.querySelectorAll('.template-item').forEach(item => {
     });
 });
 
-// Draw
+// Draw Mode
 const toggleDraw = document.getElementById('toggleDrawBtn');
 toggleDraw.addEventListener('click', () => {
     canvas.isDrawingMode = !canvas.isDrawingMode;
