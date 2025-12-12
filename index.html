@@ -10,43 +10,41 @@
 <body>
 
     <header class="top-nav">
-        <div class="left-section">
-            <div class="logo">CreativeStudio</div>
-            <button class="btn-purple mobile-compact-btn" id="headerUploadBtn">
-                <i class="fas fa-cloud-upload-alt"></i> <span>Upload</span>
-            </button>
-            <input type="file" id="hiddenUploadInput" accept="image/*" hidden>
-        </div>
+    <div class="left-section">
+        <div class="logo">CreativeStudio</div>
+        <button class="btn-purple mobile-compact-btn" id="headerUploadBtn">
+            <i class="fas fa-cloud-upload-alt"></i> <span>Upload</span>
+        </button>
+        <input type="file" id="hiddenUploadInput" accept="image/*" hidden>
+    </div>
 
-        <div class="header-quick-tools">
-            <button class="icon-btn-text" id="headerAddTextBtn" title="Add Text">
-                <i class="fas fa-font"></i> <span>Text</span>
-            </button>
-            
-            <button class="icon-btn-text" id="headerCropBtn" title="Crop Square">
-                <i class="fas fa-crop-alt"></i> <span>Crop</span>
-            </button>
-            
-            <button class="icon-btn-text" id="headerRotateBtn" title="Rotate 90°">
-                <i class="fas fa-sync-alt"></i> <span>Rotate</span>
-            </button>
-            
-            <button class="icon-btn-text" id="themeToggleBtn" title="Dark/Light Mode">
-                <i class="fas fa-moon"></i> <span>Theme</span>
-            </button>
-        </div>
+    <div class="header-quick-tools">
+        <button class="btn-purple mobile-compact-btn" id="headerAddTextBtn" style="background:#555; margin-right:5px;">
+            <i class="fas fa-font"></i> <span>Text</span>
+        </button>
+        
+        <button class="icon-btn-text" id="headerCropBtn" title="Crop">
+            <i class="fas fa-crop-alt"></i>
+        </button>
+        <button class="icon-btn-text" id="headerRotateBtn" title="Rotate">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="icon-btn-text" id="themeToggleBtn" title="Theme">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
 
-        <div class="nav-actions">
-            <div class="undo-redo-group">
-                <button class="icon-btn" id="undoBtn" title="Undo"><i class="fas fa-arrow-left"></i></button>
-                <button class="icon-btn" id="redoBtn" title="Redo"><i class="fas fa-arrow-right"></i></button>
-            </div>
-            
-            <button class="btn-purple mobile-compact-btn" id="downloadBtn">
-                <i class="fas fa-download"></i> <span>Save</span>
-            </button>
+    <div class="nav-actions">
+        <div class="undo-redo-group">
+            <button class="icon-btn" id="undoBtn"><i class="fas fa-arrow-left"></i></button>
+            <button class="icon-btn" id="redoBtn"><i class="fas fa-arrow-right"></i></button>
         </div>
-    </header>
+        
+        <button class="btn-purple mobile-compact-btn" id="downloadBtn">
+            <i class="fas fa-download"></i> <span>Save</span>
+        </button>
+    </div>
+</header>
 
     <div class="main-container">
 
