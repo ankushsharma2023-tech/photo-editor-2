@@ -89,13 +89,20 @@ canvas.on('mouse:down', () => { if (window.innerWidth <= 768) toolsPanel.classLi
 // --- 4. Tool Features ---
 
 // Header: Text Button (New)
+// Header: Text Button
 document.getElementById('headerAddTextBtn').addEventListener('click', () => {
     const text = new fabric.IText('New Text', { 
         left: canvas.width / 2, top: canvas.height / 2, 
         originX: 'center', originY: 'center', fontSize: 30, fill: '#000' 
     });
     canvas.add(text); canvas.setActiveObject(text); saveHistory();
-    openPanel('panel-text'); // Auto-open text panel
+    // Auto-open text panel (reusing the function from before)
+    // If you don't have the openPanel function defined, just use this:
+    document.querySelectorAll('.sidebar-icon').forEach(i => i.classList.remove('active'));
+    document.querySelector('.sidebar-icon[data-target="panel-text"]').classList.add('active');
+    document.querySelectorAll('.tool-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('panel-text').classList.add('active');
+    if (window.innerWidth <= 768) { document.getElementById('toolsPanel').classList.add('open'); }
 });
 
 // Sidebar: Add Text Button

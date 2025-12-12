@@ -1,4 +1,5 @@
 :root {
+    /* --- COLOR VARIABLES --- */
     --primary-color: #8b3dff;
     --bg-light: #f4f5f7;
     --bg-white: #ffffff;
@@ -6,11 +7,13 @@
     --text-muted: #777777;
     --border-color: #e0e0e0;
     
+    /* --- DIMENSIONS --- */
     --sidebar-width: 80px;
     --panel-width: 280px;
     --header-height: 60px;
 }
 
+/* --- DARK MODE OVERRIDES --- */
 body.dark-mode {
     --bg-light: #121212;
     --bg-white: #1e1e1e;
@@ -19,83 +22,220 @@ body.dark-mode {
     --border-color: #333333;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+/* --- GLOBAL RESET --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+}
 
 body { 
-    height: 100vh; display: flex; flex-direction: column; 
-    background: var(--bg-light); color: var(--text-main);
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    background: var(--bg-light); 
+    color: var(--text-main);
     overflow: hidden; 
     transition: background 0.3s, color 0.3s;
 }
 
+/* =========================================
+   HEADER STYLES (Fixed Alignment)
+   ========================================= */
 .top-nav {
     height: var(--header-height);
     background: var(--bg-white);
     border-bottom: 1px solid var(--border-color);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 15px; z-index: 100;
+    /* Flexbox Row Layout */
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    padding: 0 15px; 
+    z-index: 100;
 }
 
-.left-section { display: flex; align-items: center; }
-.logo { font-weight: 800; font-size: 18px; color: var(--primary-color); }
-
-.header-quick-tools { display: flex; gap: 10px; }
-.header-quick-tools .icon-btn-text {
-    border: none; background: transparent; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 12px; color: var(--text-muted);
+/* Left Group */
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
-.header-quick-tools .icon-btn-text i { font-size: 16px; margin-bottom: 2px; }
-.header-quick-tools .icon-btn-text:hover { color: var(--primary-color); }
 
-.nav-actions { display: flex; gap: 10px; align-items: center; }
+.logo { 
+    font-weight: 800; 
+    font-size: 18px; 
+    color: var(--primary-color); 
+}
 
-/* Main Grid */
-.main-container { flex: 1; display: flex; position: relative; height: calc(100vh - var(--header-height)); }
+/* Middle Group (Tools) */
+.header-quick-tools {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex: 1; /* Takes available space */
+}
 
-/* Sidebar */
+/* Right Group (Actions) */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* FIX: Undo/Redo Side-by-Side */
+.undo-redo-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+/* --- BUTTON STYLES --- */
+
+/* Purple Pill Button (Upload, Save, Text) */
+.btn-purple { 
+    background: var(--primary-color); 
+    color: white; 
+    border: none; 
+    padding: 8px 20px; 
+    border-radius: 25px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    font-size: 13px;
+    white-space: nowrap;
+    height: 38px;
+}
+.btn-purple:hover { opacity: 0.9; }
+
+/* Circle Icon Button (Undo/Redo) */
+.icon-btn { 
+    width: 35px; 
+    height: 35px; 
+    border-radius: 50%; 
+    border: 1px solid var(--border-color); 
+    background: var(--bg-white); 
+    color: var(--text-main);
+    cursor: pointer; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-shrink: 0;
+}
+.icon-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+
+/* Text+Icon Button (Crop, Rotate, Theme) */
+/* Icons Text Button (Middle Section) */
+.icon-btn-text {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column; /* Stacks Icon on Top, Text Below */
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 11px;
+    min-width: 50px; /* Gives them enough breathing room */
+    padding: 5px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.icon-btn-text i {
+    font-size: 18px; /* Slightly larger icon */
+    margin-bottom: 4px; /* Space between icon and text */
+    color: var(--text-main);
+}
+
+.icon-btn-text:hover {
+    background-color: var(--bg-light); /* Light hover effect */
+    color: var(--primary-color);
+}
+
+.icon-btn-text:hover i {
+    color: var(--primary-color);
+}
+
+
+/* =========================================
+   MAIN LAYOUT (Desktop)
+   ========================================= */
+.main-container { 
+    flex: 1; 
+    display: flex; 
+    position: relative; 
+    height: calc(100vh - var(--header-height)); 
+}
+
+/* Sidebar (Left) */
 .icon-sidebar {
-    width: var(--sidebar-width); background: var(--bg-white);
+    width: var(--sidebar-width); 
+    background: var(--bg-white);
     border-right: 1px solid var(--border-color);
-    display: flex; flex-direction: column; align-items: center; padding-top: 10px; z-index: 20;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    padding-top: 10px; 
+    z-index: 20;
 }
+
 .sidebar-icon {
-    width: 100%; padding: 15px 0; display: flex; flex-direction: column; align-items: center;
-    cursor: pointer; color: var(--text-muted); font-size: 12px; transition: 0.2s;
+    width: 100%; 
+    padding: 15px 0; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    cursor: pointer; 
+    color: var(--text-muted); 
+    font-size: 12px; 
+    transition: 0.2s;
+    border-left: 3px solid transparent;
 }
 .sidebar-icon i { font-size: 20px; margin-bottom: 5px; }
-.sidebar-icon:hover, .sidebar-icon.active { color: var(--primary-color); background: var(--bg-light); }
+.sidebar-icon:hover, .sidebar-icon.active { 
+    color: var(--primary-color); 
+    background: var(--bg-light); 
+    border-left: 3px solid var(--primary-color);
+}
 
-/* Tools Panel */
+/* Tools Panel (Middle Drawer) */
 .tools-panel {
-    width: var(--panel-width); background: var(--bg-white);
-    border-right: 1px solid var(--border-color); padding: 20px; overflow-y: auto;
+    width: var(--panel-width); 
+    background: var(--bg-white);
+    border-right: 1px solid var(--border-color); 
+    padding: 20px; 
+    overflow-y: auto;
 }
 .tools-panel h3 { margin-bottom: 15px; color: var(--text-main); }
+.tools-panel label { font-size: 12px; font-weight: 600; margin-bottom: 5px; display: block; color: var(--text-muted); }
+
 .tool-section { display: none; animation: fadeIn 0.3s; }
 .tool-section.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 
-/* Canvas */
+/* Canvas Area (Right/Center) */
 .canvas-area {
-    flex: 1; background: var(--bg-light); display: flex; justify-content: center; align-items: center; overflow: auto; padding: 20px;
+    flex: 1; 
+    background: var(--bg-light); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    overflow: auto; 
+    padding: 20px;
 }
 .canvas-container-wrapper { box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
 
-/* UI Components */
-.btn-purple { 
-    background: var(--primary-color); color: white; border: none; padding: 8px 15px; 
-    border-radius: 20px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; 
-}
-.icon-btn { 
-    width: 35px; height: 35px; border-radius: 50%; 
-    border: 1px solid var(--border-color); background: var(--bg-white); color: var(--text-main);
-    cursor: pointer; display: flex; justify-content: center; align-items: center; 
-}
+/* --- Tool Components --- */
+.full-width-btn { width: 100%; justify-content: center; margin-bottom: 10px; border-radius: 8px; padding: 12px; }
 .tool-btn { 
     background: var(--bg-white); border: 1px solid var(--border-color); color: var(--text-main);
     padding: 10px; border-radius: 6px; cursor: pointer; text-align: center;
 }
-.tool-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
-.full-width-btn { width: 100%; justify-content: center; margin-bottom: 10px; border-radius: 8px; padding: 12px; }
 .button-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .sticker-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .sticker-btn { font-size: 24px; background: var(--bg-light); border: none; border-radius: 8px; padding: 10px; cursor: pointer; }
@@ -103,91 +243,78 @@ body {
 .template-item { 
     background: var(--bg-light); color: var(--text-muted); height: 80px; 
     display: flex; align-items: center; justify-content: center; border-radius: 6px; 
-    font-size: 12px; cursor: pointer; border: 1px solid transparent;
+    font-size: 12px; cursor: pointer; text-align: center; border: 1px solid transparent;
 }
+.template-item:hover { border-color: var(--primary-color); color: var(--primary-color); }
 .tool-select, .color-picker { 
     width: 100%; margin-bottom: 10px; padding: 5px; 
     background: var(--bg-white); border: 1px solid var(--border-color); color: var(--text-main);
 }
 
-/* --- RESPONSIVE MOBILE STYLES (Use fixed positioning) --- */
-@media (max-width: 768px) {
-    
-    /* 1. Reset Main Container */
-    .main-container {
-        display: block; /* Remove flexbox complexity for mobile */
-        height: auto;
-    }
 
-    /* 2. Sidebar: Force it to stick to the bottom */
-    .icon-sidebar {
-        position: fixed;       /* This ensures it floats above everything else */
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 70px;          /* Taller touch area */
-        flex-direction: row;   /* Horizontal icons */
-        border-right: none;
-        border-top: 1px solid var(--border-color);
-        justify-content: space-around;
-        padding: 0;
-        z-index: 1000;         /* Highest Priority */
-        background: var(--bg-white); /* Ensure it's not transparent */
-        box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
-    }
-    
-    .sidebar-icon {
-        padding: 8px 0;
-        border-bottom: 3px solid transparent;
-        border-left: none;
-        flex: 1;              /* Distribute icons evenly */
-        display: flex;
+/* =========================================
+   MOBILE RESPONSIVE (Phone Styles)
+   ========================================= */
+@media (max-width: 768px) {
+    /* Reset Main Layout */
+    .main-container { display: block; height: auto; }
+
+    /* Hide Logo */
+    .logo { display: none; }
+
+    /* Header Adjustments */
+    .top-nav { padding: 0 8px; gap: 5px; }
+
+    /* FIX: Force "Pill" shape on buttons to stop them becoming circles */
+    .mobile-compact-btn {
+        padding: 6px 12px !important;
+        border-radius: 20px !important;
+        width: auto !important;
+        height: 34px !important;
+        aspect-ratio: auto !important;
+        display: flex !important;
+        align-items: center;
         justify-content: center;
     }
-    
-    .sidebar-icon.active {
-        border-bottom: 3px solid var(--primary-color);
-        background: transparent;
-        color: var(--primary-color);
+    .mobile-compact-btn span { 
+        display: inline-block !important; 
+        font-size: 12px;
+    }
+    .mobile-compact-btn i { font-size: 12px; }
+
+    /* Header Middle Tools: Scrollable */
+    .header-quick-tools { 
+        justify-content: flex-start; 
+        overflow-x: auto;
+        padding-right: 10px;
     }
 
-    .sidebar-icon span {
-        font-size: 10px;
-        margin-top: 2px;
-    }
+    /* Undo/Redo Group Adjustments */
+    .undo-redo-group { gap: 5px; }
+    .undo-redo-group .icon-btn { width: 30px; height: 30px; font-size: 12px; }
 
-    /* 3. Tools Panel (Drawer): Slides up ABOVE the sidebar */
+    /* Hide text labels for Crop/Rotate/Theme only */
+    .header-quick-tools .icon-btn-text span { display: none; }
+
+    /* Sidebar: Fixed to Bottom */
+    .icon-sidebar {
+        position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+        flex-direction: row; border-right: none; border-top: 1px solid var(--border-color);
+        justify-content: space-around; padding: 0; z-index: 1000;
+        background: var(--bg-white); box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+    }
+    .sidebar-icon { padding: 8px 0; border-bottom: 3px solid transparent; border-left: none; flex: 1; }
+    .sidebar-icon.active { border-bottom: 3px solid var(--primary-color); border-left: none; color: var(--primary-color); }
+    .sidebar-icon span { font-size: 10px; margin-top: 2px; }
+
+    /* Tools Panel: Bottom Drawer */
     .tools-panel {
-        position: fixed;
-        bottom: 70px;        /* Sit exactly on top of the sidebar */
-        left: 0;
-        width: 100%;
-        height: 280px;       /* Fixed height for tools */
-        z-index: 999;        /* Below sidebar but above canvas */
-        display: none;       /* Hidden by default */
-        border-radius: 20px 20px 0 0;
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
-        border-top: 1px solid var(--border-color);
-        background: var(--bg-white);
+        position: fixed; bottom: 70px; left: 0; width: 100%; height: 280px;
+        z-index: 999; display: none; border-radius: 20px 20px 0 0;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.2); border-top: 1px solid var(--border-color);
     }
+    .tools-panel.open { display: block; }
     
-    .tools-panel.open {
-        display: block;
-    }
-
-    /* 4. Canvas Area: Ensure space for header and footer */
-    .canvas-area {
-        height: calc(100vh - 130px); /* 100vh - Header(60) - Sidebar(70) */
-        width: 100%;
-        padding: 10px;
-        /* Prevent canvas from scrolling behind header */
-        margin-top: 0; 
-        overflow: hidden; 
-    }
-
-    /* Mobile Header Tweaks */
-    .logo { display: none; } /* Save space */
-    .btn-purple span { display: none; } /* Hide "Download" text, keep icon */
-    .btn-purple { padding: 10px; border-radius: 50%; aspect-ratio: 1; }
-    .header-quick-tools .icon-btn-text span { display: none; } /* Hide text for Crop/Rotate */
+    /* Canvas Area Sizing */
+    .canvas-area { height: calc(100vh - 130px); width: 100%; padding: 10px; overflow: hidden; }
 }
