@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CreativeStudio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="top-nav">
+        <div class="logo">CreativeStudio</div>
+
+        <div class="header-quick-tools">
+            <button class="icon-btn-text" id="headerCropBtn" title="Crop (Square)">
+                <i class="fas fa-crop-alt"></i> <span>Crop</span>
+            </button>
+            <button class="icon-btn-text" id="headerRotateBtn" title="Rotate">
+                <i class="fas fa-sync-alt"></i> <span>Rotate</span>
+            </button>
+        </div>
+
+        <div class="nav-actions">
+            <button class="icon-btn" id="undoBtn" title="Undo"><i class="fas fa-arrow-left"></i></button>
+            <button class="icon-btn" id="redoBtn" title="Redo"><i class="fas fa-arrow-right"></i></button>
+            
+            <button class="btn-purple header-btn" id="downloadBtn">
+                <i class="fas fa-download"></i> Download
+            </button>
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <div class="icon-sidebar">
+            <div class="sidebar-icon active" data-target="panel-templates" title="Templates"><i class="fas fa-th-large"></i><span>Templates</span></div>
+            <div class="sidebar-icon" data-target="panel-upload" title="Upload/Filters"><i class="fas fa-image"></i><span>Photos</span></div>
+            <div class="sidebar-icon" data-target="panel-text" title="Text"><i class="fas fa-font"></i><span>Text</span></div>
+            <div class="sidebar-icon" data-target="panel-stickers" title="Stickers"><i class="fas fa-smile"></i><span>Stickers</span></div>
+            <div class="sidebar-icon" data-target="panel-shapes" title="Shapes"><i class="fas fa-shapes"></i><span>Shapes</span></div>
+            <div class="sidebar-icon" data-target="panel-draw" title="Draw"><i class="fas fa-pencil-alt"></i><span>Draw</span></div>
+        </div>
+
+        <div class="tools-panel" id="toolsPanel">
+            
+            <div class="tool-section active" id="panel-templates">
+                <h3>Templates</h3>
+                <div class="grid-2-col">
+                    <div class="template-item" id="tmpl1">Instagram Post</div>
+                    <div class="template-item" id="tmpl2">Facebook Cover</div>
+                    <div class="template-item" id="tmpl3">Story</div>
+                    <div class="template-item" id="tmpl4">Thumbnail</div>
+                </div>
+            </div>
+
+            <div class="tool-section" id="panel-upload">
+                <h3>Photos & Filters</h3>
+                <label for="imageUpload" class="btn-purple full-width-btn">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload Image
+                </label>
+                <input type="file" id="imageUpload" accept="image/*" hidden>
+                
+                <div class="tool-separator"></div>
+                <h4>Filters</h4>
+                <div class="button-grid">
+                    <button class="tool-btn filter-btn" data-filter="grayscale">B&W</button>
+                    <button class="tool-btn filter-btn" data-filter="sepia">Sepia</button>
+                    <button class="tool-btn filter-btn" data-filter="vintage">Vintage</button>
+                    <button class="tool-btn filter-btn" data-filter="reset">Reset</button>
+                </div>
+            </div>
+
+            <div class="tool-section" id="panel-text">
+                <h3>Add Text</h3>
+                <button class="btn-purple full-width-btn" id="addTextBtn">+ Add Heading</button>
+                
+                <div id="textControls" style="margin-top:15px; display:none; border-top:1px solid #ddd; padding-top:10px;">
+                    <label>Font Family</label>
+                    <select id="fontFamilySelect" class="tool-select">
+                        <option value="Arial">Arial</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Brush Script MT">Brush Script</option>
+                    </select>
+                    <label>Color</label>
+                    <input type="color" id="textColorPicker" class="color-picker" value="#000000">
+                </div>
+            </div>
+
+            <div class="tool-section" id="panel-stickers">
+                <h3>Stickers</h3>
+                <div class="sticker-grid">
+                    <button class="sticker-btn" onclick="addSticker('😎')">😎</button>
+                    <button class="sticker-btn" onclick="addSticker('🔥')">🔥</button>
+                    <button class="sticker-btn" onclick="addSticker('❤️')">❤️</button>
+                    <button class="sticker-btn" onclick="addSticker('🎉')">🎉</button>
+                    <button class="sticker-btn" onclick="addSticker('⭐')">⭐</button>
+                    <button class="sticker-btn" onclick="addSticker('👑')">👑</button>
+                </div>
+            </div>
+
+            <div class="tool-section" id="panel-shapes">
+                <h3>Shapes</h3>
+                <div class="button-grid">
+                    <button class="tool-btn" id="addRectBtn"><i class="far fa-square"></i></button>
+                    <button class="tool-btn" id="addCircleBtn"><i class="far fa-circle"></i></button>
+                    <button class="tool-btn" id="addTriangleBtn"><i class="fas fa-play fa-rotate-270"></i></button>
+                </div>
+                <div style="margin-top:10px;">
+                    <label>Shape Color</label>
+                    <input type="color" id="shapeColorPicker" class="color-picker" value="#8b3dff">
+                </div>
+            </div>
+
+            <div class="tool-section" id="panel-draw">
+                <h3>Free Draw</h3>
+                <button class="tool-btn full-width-btn" id="toggleDrawBtn">Enable Drawing</button>
+                <div id="drawingControls" style="display:none; margin-top:15px;">
+                     <label>Color</label>
+                     <input type="color" id="brushColor" class="color-picker" value="#000000">
+                     <label>Size: <span id="brushSizeVal">5</span></label>
+                     <input type="range" id="brushSize" min="1" max="50" value="5">
+                </div>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <div class="canvas-container-wrapper">
+                <canvas id="editorCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
